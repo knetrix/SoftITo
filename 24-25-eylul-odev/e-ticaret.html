@@ -1,0 +1,773 @@
+<!doctype html>
+<!-- HTML5 Belge Türü Bildirimi -->
+<html lang="tr">
+  <!-- Sayfa Dilini Türkçe Olarak Belirler -->
+  <head>
+    <!-- Karakter Kodlamasını Türkçe Karakterleri Destekleyen UTF-8 Yapar -->
+    <meta charset="UTF-8" />
+    <!-- Mobil ve Masaüstü Cihazlara Uyumluluk Sağlar -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Tarayıcı Sekmesinde Görünen Başlık -->
+    <title>MustafaStore - Retro Katalog</title>
+
+    <!-- Dahili CSS Biçimlendirme Kodları -->
+    <style>
+      /* Tüm Elemanlar ve Sahte Elemanlar İçin Kutu Boyutunu Sabitler, Boşlukları Sıfırlar */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box; /* Kenarlık ve İç Boşlukları Boyuta Dahil Eder */
+        margin: 0; /* Tarayıcı Dış Boşluklarını Sıfırlar */
+        padding: 0; /* Tarayıcı İç Boşluklarını Sıfırlar */
+      }
+
+      /* Global CSS Değişkenleri (Renk Paleti ve Sabit Değerler) */
+      :root {
+        --primary: #c85a32; /* Ana Kiremit Vurgu Rengi */
+        --primary-hover: #b04e29; /* Buton Üzerine Gelindiğindeki Koyu Ton */
+        --bg: #f5f0e6; /* Sayfa Arka Plan Rengi */
+        --card: #fffdf9; /* Kart ve Panel Arka Plan Rengi */
+        --border: #2d2621; /* Kenarlık ve Çerçeve Rengi */
+        --text: #2d2621; /* Ana Metin Rengi */
+        --muted: #796e65; /* İkincil ve Soluk Metin Rengi */
+        --danger: #b91c1c; /* Silme ve Uyarı Kırmızı Rengi */
+        --shadow: 4px 4px 0px var(--border); /* Retro Tarzı Sert Kenarlık Gölgesi */
+        --font-mono:
+          "Courier New", Courier, monospace; /* Fiyat ve Kod Alanları İçin Yazı Tipi */
+      }
+
+      /* Sayfanın Genel Gövde Biçimlendirmesi */
+      body {
+        font-family:
+          "Trebuchet MS", "Lucida Grande", sans-serif; /* Ana Yazı Tipi */
+        background: var(--bg); /* Arka Plan Rengini Uygular */
+        color: var(--text); /* Metin Rengini Uygular */
+        padding: 28px 16px; /* Dış Kenarlardan İç Boşluk Bırakır */
+        line-height: 1.4; /* Satır Yüksekliği Oranı */
+      }
+
+      /* Sayfa Genişliğini 1200px ile Sınırlar ve Yatayda Ortalar */
+      .sayfa-kapsayici {
+        max-width: 1200px; /* Maksimum Genişlik */
+        margin: 0 auto; /* Sayfayı Ortalar */
+      }
+
+      /* Ortak Form Giriş Alanı ve Seçim Kutusu Temelleri */
+      input,
+      select {
+        width: 100%; /* Bulunduğu Alanın Tamamını Kaplar */
+        padding: 8px 10px; /* İç Boşluk */
+        font-size: 13px; /* Yazı Boyutu */
+        font-family: inherit; /* Sayfa Yazı Tipini Miras Alır */
+        border: 2px solid var(--border); /* Kalın Retro Kenarlık */
+        border-radius: 4px; /* Hafif Köşe Yuvarlama */
+        background: #fff; /* Beyaz Arka Plan */
+        color: var(--text); /* Metin Rengi */
+        outline: none; /* Varsayılan Odak Çerçevesini Kaldırır */
+      }
+
+      /* Giriş Alanlarına Odaklanıldığında (Focus) */
+      input:focus,
+      select:focus {
+        background: #fff9f0; /* Hafif Sıcak Zemin Rengi */
+        box-shadow: 2px 2px 0 var(--border); /* Sert Odak Gölgesi */
+      }
+
+      /* Genel Buton Temeli ve Çerçeveleri */
+      button {
+        cursor: pointer; /* Tıklanabilir Fare İmleci */
+        font-family: inherit; /* Yazı Tipini Miras Alır */
+        font-weight: 800; /* Kalın Yazı */
+        border: 2px solid var(--border); /* Kalın Kenarlık */
+        border-radius: 4px; /* Köşe Yuvarlama */
+        box-shadow: 2px 2px 0 var(--border); /* Retro Buton Gölgesi */
+        transition: all 0.1s ease; /* Hızlı Geçiş Efekti */
+      }
+
+      /* Butona Tıklandığı Anda Basılma Efekti (Active) */
+      button:active {
+        transform: translate(2px, 2px); /* Butonu Sağ Aşağı Kaydırır */
+        box-shadow: 0 0 0 !important; /* Gölgeyi Sıfırlayarak Basılma Hissi Verir */
+      }
+
+      /* ==================== ÜST BİLGİ (HEADER) & SAYAÇLAR ==================== */
+      .header {
+        margin-bottom: 18px; /* Alt Boşluk */
+        padding-bottom: 14px; /* Çizgi Üstü Boşluğu */
+        border-bottom: 3px double var(--border); /* Çift Çizgili Retro Alt Kenarlık */
+        display: flex; /* Esnek Kutu Düzeni */
+        justify-content: space-between; /* Başlığı Sola, Sayaçları Sağa Yaslar */
+        align-items: center; /* Dikeyde Ortalar */
+        flex-wrap: wrap; /* Mobilde Sığmazsa Alt Satıra Geçirir */
+        gap: 12px; /* Elemanlar Arası Boşluk */
+      }
+
+      /* Ana Logo/Başlık Stili */
+      .header h1 {
+        font-size: 26px; /* Başlık Boyutu */
+        font-weight: 900; /* Ekstra Kalın Yazı */
+        color: var(--primary); /* Kiremit Rengi */
+        letter-spacing: 1px; /* Harf Arası Açıklık */
+        text-transform: uppercase; /* Büyük Harflere Dönüştürür */
+      }
+
+      /* Üst Bölüm Sağ Sayaç Kapsayıcısı */
+      .header-sag {
+        display: flex; /* Elemanları Yan Yana Dizer */
+        align-items: center; /* Dikeyde Ortalar */
+        gap: 10px; /* Sayaçlar Arası Boşluk */
+      }
+
+      /* Ürün ve Sepet Sayaç Kutularının Ortak Stili */
+      .urun-sayisi,
+      .sepet-rozet {
+        font-size: 13px; /* Yazı Boyutu */
+        font-family: var(--font-mono); /* Sabit Genişlikli Yazı Tipi */
+        font-weight: 700; /* Kalın Yazı */
+        padding: 6px 10px; /* İç Boşluk */
+        border: 2px solid var(--border); /* Çerçeve */
+        border-radius: 4px; /* Köşe Yuvarlama */
+      }
+
+      /* Toplam Ürün Adedi Rozet Stili */
+      .urun-sayisi {
+        background: #e8e0d0; /* Kırık Bej Rengi Arka Plan */
+      }
+
+      /* Sepet Adedi Rozet Stili */
+      .sepet-rozet {
+        background: #fef08a; /* Dikkat Çekici Sarı Arka Plan */
+        box-shadow: 2px 2px 0 var(--border); /* Sert Kenarlık Gölgesi */
+        font-weight: 800; /* Ekstra Kalın */
+      }
+
+      /* ==================== KPI GÖSTERGE KARTLARI ==================== */
+      .kpi-grid {
+        display: grid; /* Izgara Düzeni Başlatır */
+        grid-template-columns: repeat(
+          2,
+          1fr
+        ); /* Eşit Genişlikte İki Sütun Yapar */
+        gap: 14px; /* Kartlar Arası Boşluk */
+        margin-bottom: 22px; /* Alttaki Panel ile Boşluk */
+      }
+
+      /* Tekil KPI Kartı Kapsayıcısı */
+      .kpi-kutu {
+        background: var(--card); /* Beyaz Arka Plan */
+        border: 2px solid var(--border); /* Kalın Kenarlık */
+        box-shadow: var(--shadow); /* Retro Gölge */
+        padding: 12px 16px; /* İç Boşluk */
+        border-radius: 6px; /* Köşe Yuvarlama */
+      }
+
+      /* KPI Üst Açıklama Etiketi */
+      .kpi-etiket {
+        font-size: 11px; /* Küçük Yazı */
+        font-weight: 800; /* Kalın Yazı */
+        color: var(--muted); /* Soluk Metin Rengi */
+        font-family: var(--font-mono); /* Sabit Genişlikli Yazı Tipi */
+        text-transform: uppercase; /* Tamamı Büyük Harf */
+        display: block; /* Blok Haline Getirerek Alt Satıra İtir */
+        margin-bottom: 3px; /* Alt Boşluk */
+      }
+
+      /* KPI Sayısal Gösterge Değeri */
+      .kpi-deger {
+        font-size: 20px; /* Büyük Sayı Boyutu */
+        font-weight: 900; /* Ekstra Kalın Yazı */
+        color: var(--primary); /* Kiremit Vurgu Rengi */
+        font-family: var(--font-mono); /* Sabit Genişlikli Yazı Tipi */
+      }
+
+      /* ==================== FORM PANELİ ==================== */
+      .panel {
+        background: var(--card); /* Beyaz Panel Arka Planı */
+        border: 2px solid var(--border); /* Çerçeve */
+        border-radius: 6px; /* Köşe Yuvarlama */
+        box-shadow: var(--shadow); /* Retro Gölge */
+        padding: 20px; /* İç Boşluk */
+        margin-bottom: 24px; /* Alt Bölüm ile Boşluk */
+      }
+
+      /* Form Paneli Başlığı */
+      .panel h2 {
+        font-size: 16px; /* Başlık Boyutu */
+        text-transform: uppercase; /* Büyük Harfe Çevirir */
+        margin-bottom: 14px; /* Alt Boşluk */
+        border-bottom: 2px dashed var(--border); /* Kesikli Çizgi Çeker */
+        padding-bottom: 8px; /* Çizgi Üstü Boşluğu */
+      }
+
+      /* Form İçerisindeki Alanları Sütunlara Bölen Izgara */
+      .form-grid {
+        display: grid; /* Izgara Düzeni */
+        grid-template-columns: repeat(
+          auto-fit,
+          minmax(160px, 1fr)
+        ); /* Ekran Boyutuna Göre Esneyen Sütunlar */
+        gap: 14px; /* Giriş Alanları Arası Boşluk */
+      }
+
+      /* Form Giriş Alanı Etiketleri */
+      .field label {
+        display: block; /* Blok Haline Getirir */
+        font-size: 12px; /* Yazı Boyutu */
+        font-weight: 700; /* Kalın Yazı */
+        margin-bottom: 5px; /* Etiket ile Kutu Arası Boşluk */
+        text-transform: uppercase; /* Tamamı Büyük Harf */
+      }
+
+      /* Dosya Seçim Giriş Alanı */
+      .field input[type="file"] {
+        font-size: 11px; /* Küçük Punto */
+        padding: 5px; /* Daraltılmış İç Boşluk */
+      }
+
+      /* Turuncu Vurgulu Butonlar */
+      .btn-ekle,
+      .btn-sepet {
+        background: var(--primary); /* Kiremit Zemin Rengi */
+        color: #fff; /* Beyaz Metin */
+      }
+
+      /* Turuncu Butonların Üzerine Gelindiğinde */
+      .btn-ekle:hover,
+      .btn-sepet:hover {
+        background: var(--primary-hover); /* Bir Ton Koyu Kiremit */
+      }
+
+      /* Yeni Ürün Ekle Butonu */
+      .btn-ekle {
+        align-self: flex-end; /* Form Izgarasında Alta Hizalar */
+        height: 40px; /* Buton Yüksekliği */
+        padding: 9px 16px; /* İç Boşluk */
+        font-size: 13px; /* Yazı Boyutu */
+        box-shadow: 3px 3px 0 var(--border); /* Sert Kenarlık Gölgesi */
+      }
+
+      /* ==================== FİLTRE VE SIRALAMA ÇUBUĞU ==================== */
+      .filtre-bar {
+        display: flex; /* Elemanları Yan Yana Dizer */
+        gap: 12px; /* Arama ve Filtreler Arası Boşluk */
+        margin-bottom: 24px; /* Ürün Listesi ile Boşluk */
+        flex-wrap: wrap; /* Dar Ekranlarda Alt Satıra Kaydırır */
+      }
+
+      /* Filtre Çubuğu Giriş Elemanlarının Gölgeleri */
+      .filtre-bar input,
+      .filtre-bar select {
+        box-shadow: 3px 3px 0 var(--border); /* Sert Kenarlık Gölgesi */
+        padding: 10px 14px; /* Ferah İç Boşluk */
+      }
+
+      /* Arama Giriş Alanı Genişliği */
+      .filtre-bar input {
+        flex: 2; /* Daha Geniş Alan Kaplar */
+        min-width: 180px; /* Minimum Genişlik Sınırı */
+      }
+
+      /* Kategori ve Sıralama Seçim Kutuları Genişliği */
+      .filtre-bar select {
+        flex: 1; /* Eşit Oranda Alan Kaplar */
+        min-width: 150px; /* Minimum Genişlik Sınırı */
+      }
+
+      /* ==================== ÜRÜN IZGARASI VE KARTLARI ==================== */
+      /* Varsayılan Mobil Düzen: Tek Sütun */
+      .urun-grid {
+        display: grid; /* Izgara Yapısı */
+        grid-template-columns: 1fr; /* Tek Sütun */
+        gap: 20px; /* Kartlar Arası Boşluk */
+      }
+
+      /* Tablet Ekranlar İçin Çift Sütun */
+      @media (min-width: 600px) {
+        .urun-grid {
+          grid-template-columns: repeat(2, 1fr); /* İki Eşit Sütun */
+        }
+      }
+
+      /* Masaüstü Ekranlar İçin Dört Sütun */
+      @media (min-width: 1024px) {
+        .urun-grid {
+          grid-template-columns: repeat(4, 1fr); /* Dört Eşit Sütun */
+        }
+      }
+
+      /* Tekil Ürün Kartı Kapsayıcısı */
+      .urun-karti {
+        background: var(--card); /* Beyaz Arka Plan */
+        border: 2px solid var(--border); /* Kalın Kenarlık */
+        border-radius: 6px; /* Köşe Yuvarlama */
+        overflow: hidden; /* Taşan Kısımları Gizler */
+        display: flex; /* Esnek Kutu */
+        flex-direction: column; /* İçeriği Dikey Sıralar */
+        justify-content: space-between; /* Butonları En Alta İtir */
+        box-shadow: var(--shadow); /* Retro Sert Gölge */
+        transition: all 0.15s ease; /* Hızlı Geçiş Efekti */
+      }
+
+      /* Kartın Üzerine Gelindiğinde (Hover) */
+      .urun-karti:hover {
+        transform: translate(-2px, -2px); /* Kartı Yukarı Sola Hafif Kaydırır */
+        box-shadow: 6px 6px 0 var(--border); /* Gölgeyi Büyütür */
+      }
+
+      /* Kart Üst Görsel Alanı */
+      .kart-resim-kapsayici {
+        position: relative; /* İçindeki Favori Butonuna Göre Konumlanır */
+        width: 100%; /* Tam Genişlik */
+        height: 180px; /* Sabit Yükseklik */
+        background: #eae2d3; /* Görsel Yüklenene Kadar Zemin Rengi */
+        border-bottom: 2px solid var(--border); /* Alt Kenarlık */
+      }
+
+      /* Ürün Fotoğrafı */
+      .kart-resim {
+        width: 100%; /* Kapsayıcısını Doldurur */
+        height: 100%; /* Kapsayıcısını Doldurur */
+        object-fit: fill; /* Alanı Tamamen Kaplar */
+        display: block; /* Blok Element Olarak Davranır */
+      }
+
+      /* Favori Butonu */
+      .btn-favori {
+        position: absolute; /* Görsel Üzerinde Serbest Konumlanır */
+        top: 8px; /* Üstten Boşluk */
+        right: 8px; /* Sağdan Boşluk */
+        width: 32px; /* Genişlik */
+        height: 32px; /* Yükseklik */
+        border-radius: 50%; /* Daire Şekli Verir */
+        background: #fff; /* Beyaz Zemin */
+        font-size: 16px; /* Kalp Sembolü Boyutu */
+        color: var(--border); /* Varsayılan Kalp Rengi */
+      }
+
+      /* Favoriye Eklenmiş Durum */
+      .btn-favori.aktif {
+        color: var(--danger); /* Kırmızı Kalp Rengi */
+        background: #fee2e2; /* Açık Kırmızı Zemin Rengi */
+      }
+
+      /* Kart Metin ve Buton İçerik Alanı */
+      .kart-icerik {
+        padding: 14px; /* İç Boşluk */
+        display: flex; /* Esnek Kutu */
+        flex-direction: column; /* Dikey Sıralama */
+        flex: 1; /* Kartın Kalan Alanını Doldurur */
+      }
+
+      /* Kategori İsmi Rozet Metni */
+      .kart-kategori {
+        font-size: 11px; /* Küçük Yazı */
+        font-weight: 800; /* Kalın Yazı */
+        color: var(--primary); /* Kiremit Vurgu Rengi */
+        font-family: var(--font-mono); /* Sabit Genişlikli Yazı Tipi */
+        text-transform: uppercase; /* Büyük Harf */
+        margin-bottom: 6px; /* Alt Boşluk */
+      }
+
+      /* Ürün İsmi Başlığı */
+      .kart-baslik {
+        font-size: 15px; /* Başlık Boyutu */
+        font-weight: 700; /* Kalın Yazı */
+        margin-bottom: 8px; /* Alt Boşluk */
+      }
+
+      /* Ürün Fiyatı Metni */
+      .kart-fiyat {
+        font-size: 20px; /* Büyük Fiyat Boyutu */
+        font-weight: 900; /* Ekstra Kalın */
+        font-family: var(--font-mono); /* Sabit Genişlikli Yazı Tipi */
+        margin-top: auto; /* Fiyatı Kartın Altına İter */
+        margin-bottom: 14px; /* Butonlar ile Arasındaki Boşluk */
+      }
+
+      /* Sepet ve Silme Butonlarının Bulunduğu Satır */
+      .kart-butonlar {
+        display: flex; /* Butonları Yan Yana Dizer */
+        gap: 8px; /* Butonlar Arası Boşluk */
+      }
+
+      /* Sepete Ekle Butonu */
+      .btn-sepet {
+        flex: 2; /* Daha Fazla Genişlik Alır */
+        padding: 8px; /* İç Boşluk */
+        font-size: 12px; /* Yazı Boyutu */
+      }
+
+      /* Sil Butonu */
+      .btn-sil {
+        flex: 1; /* Daha Dar Genişlik Alır */
+        background: #fff; /* Beyaz Zemin */
+        color: var(--danger); /* Kırmızı Yazı Rengi */
+        padding: 8px; /* İç Boşluk */
+        font-size: 12px; /* Yazı Boyutu */
+      }
+
+      /* Sil Butonunun Üzerine Gelindiğinde */
+      .btn-sil:hover {
+        background: var(--danger); /* Kırmızı Zemin Rengi */
+        color: #fff; /* Beyaz Yazı Rengi */
+      }
+
+      /* Arama Sonucu Ürün Bulunamadığında Gösterilen Alan */
+      .bos-durum {
+        grid-column: 1 / -1; /* Tüm Sütunları Kaplar */
+        text-align: center; /* Metni Ortalar */
+        padding: 40px; /* İç Boşluk */
+        color: var(--muted); /* Soluk Metin Rengi */
+        font-size: 14px; /* Yazı Boyutu */
+        font-family: var(--font-mono); /* Sabit Genişlikli Yazı Tipi */
+        border: 2px dashed var(--border); /* Kesikli Kenarlık */
+        background: #ece4d5; /* Bej Zemin Rengi */
+        border-radius: 6px; /* Köşe Yuvarlama */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sayfa Ana Kapsayıcısı -->
+    <div class="sayfa-kapsayici">
+      <!-- Üst Başlık ve Sayaçlar Bölümü -->
+      <header class="header">
+        <h1>Mustafa Store</h1>
+        <div class="header-sag">
+          <!-- Toplam Ürün Adedini Gösteren Alan -->
+          <span class="urun-sayisi" id="urunSayisi">0 Ürün</span>
+          <!-- Sepetteki Ürün Adedini Gösteren Alan -->
+          <span class="sepet-rozet" id="sepetSayac">🛒 Sepet (0)</span>
+        </div>
+      </header>
+
+      <!-- Temel Performans Göstergeleri (KPI) Bölümü -->
+      <section class="kpi-grid">
+        <div class="kpi-kutu">
+          <span class="kpi-etiket">Toplam Katalog Değeri</span>
+          <span class="kpi-deger" id="kpiToplam">0 ₺</span>
+        </div>
+        <div class="kpi-kutu">
+          <span class="kpi-etiket">Ortalama Ürün Fiyatı</span>
+          <span class="kpi-deger" id="kpiOrtalama">0 ₺</span>
+        </div>
+      </section>
+
+      <!-- Yeni Ürün Ekleme Paneli ve Formu -->
+      <section class="panel">
+        <h2>Yeni Ürün Ekle</h2>
+        <form id="urunForm">
+          <div class="form-grid">
+            <!-- Ürün Adı Giriş Alanı -->
+            <div class="field">
+              <label for="adInput">Ürün Adı</label>
+              <input
+                type="text"
+                id="adInput"
+                placeholder="Örn: Akıllı Saat"
+                required
+              />
+            </div>
+            <!-- Kategori Seçim Kutusu -->
+            <div class="field">
+              <label for="kategoriInput">Kategori</label>
+              <select id="kategoriInput">
+                <option value="Elektronik">Elektronik</option>
+                <option value="Moda">Moda</option>
+                <option value="Ev & Yaşam">Ev & Yaşam</option>
+              </select>
+            </div>
+            <!-- Fiyat Giriş Alanı -->
+            <div class="field">
+              <label for="fiyatInput">Fiyat (₺)</label>
+              <input
+                type="number"
+                id="fiyatInput"
+                placeholder="1500"
+                min="1"
+                required
+              />
+            </div>
+            <!-- Görsel URL Giriş Alanı -->
+            <div class="field">
+              <label for="resimInput">Görsel URL</label>
+              <input
+                type="url"
+                id="resimInput"
+                placeholder="https://... (Opsiyonel)"
+              />
+            </div>
+            <!-- Cihazdan Dosya Seçme Alanı -->
+            <div class="field">
+              <label for="dosyaInput">Veya Cihazdan Yükle</label>
+              <input type="file" id="dosyaInput" accept="image/*" />
+            </div>
+            <!-- Formu Gönderen Buton -->
+            <button type="submit" class="btn-ekle">Ürünü Ekle</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Arama, Kategori Filtreleme ve Sıralama Çubuğu -->
+      <div class="filtre-bar">
+        <!-- İsim ile Arama Kutusu -->
+        <input
+          type="text"
+          id="aramaInput"
+          placeholder="Ürün adına göre ara..."
+        />
+        <!-- Kategori Filtresi -->
+        <select id="filtreKategori">
+          <option value="ALL">Tüm Kategoriler</option>
+          <option value="Elektronik">Elektronik</option>
+          <option value="Moda">Moda</option>
+          <option value="Ev & Yaşam">Ev & Yaşam</option>
+        </select>
+        <!-- Sıralama Seçenekleri -->
+        <select id="siralaInput">
+          <option value="varsayilan">Sıralama: Varsayılan</option>
+          <option value="fiyat-artan">Fiyat: Düşükten Yükseğe</option>
+          <option value="fiyat-azalan">Fiyat: Yüksekten Düşüğe</option>
+          <option value="isim-az">İsim: A - Z</option>
+        </select>
+      </div>
+
+      <!-- Ürün Kartlarının Dinamik Olarak Basılacağı Ana Izgara -->
+      <main id="urunGrid" class="urun-grid"></main>
+    </div>
+
+    <!-- ==================== JAVASCRIPT KODLARI ==================== -->
+    <script>
+      // Kategoriye Göre SVG Formatında Varsayılan Yedek Görsel Üreten Fonksiyon
+      const svgUret = (icerik) =>
+        "data:image/svg+xml;utf8," +
+        encodeURIComponent(
+          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="100%" height="100%" fill="#ece4d5"/><circle cx="200" cy="150" r="60" fill="#ded4c3"/>${icerik}</svg>`,
+        );
+
+      // Kategorilere Özel Hazır Vektörel Yedek Görseller Nesnesi
+      const varsayilanResimler = {
+        Elektronik: svgUret(
+          '<rect x="165" y="122" width="70" height="46" rx="4" fill="#796e65"/><rect x="170" y="127" width="60" height="34" rx="2" fill="#ded4c3"/><rect x="195" y="168" width="10" height="10" fill="#796e65"/><rect x="180" y="178" width="40" height="4" rx="2" fill="#796e65"/>',
+        ),
+        Moda: svgUret(
+          '<path d="M186 122 Q200 132 214 122 L234 134 L224 150 L216 145 V180 H184 V145 L176 150 L166 134 Z" fill="#796e65"/>',
+        ),
+        "Ev & Yaşam": svgUret(
+          '<path d="M160 148 L200 118 L240 148 V182 H160 Z" fill="#796e65"/><rect x="190" y="152" width="20" height="30" rx="1" fill="#ded4c3"/>',
+        ),
+      };
+
+      // Başlangıçta Listelenecek Varsayılan Ürün Dizisi
+      const varsayilanUrunler = [
+        {
+          id: 1,
+          ad: "Kablosuz Kulaklık",
+          kategori: "Elektronik",
+          fiyat: 1850,
+          resim:
+            "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80",
+          favori: false,
+          sepetAdedi: 0,
+        },
+        {
+          id: 2,
+          ad: "Klasik Kol Saati",
+          kategori: "Moda",
+          fiyat: 3200,
+          resim:
+            "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80",
+          favori: false,
+          sepetAdedi: 0,
+        },
+        {
+          id: 3,
+          ad: "Seramik Kahve Fincanı",
+          kategori: "Ev & Yaşam",
+          fiyat: 450,
+          resim:
+            "https://static.ticimax.cloud/41289/uploads/urunresimleri/mavi-seramik-kahve-fincani--4fae-.jpg",
+          favori: false,
+          sepetAdedi: 0,
+        },
+        {
+          id: 4,
+          ad: "Mekanik Klavye",
+          kategori: "Elektronik",
+          fiyat: 2400,
+          resim:
+            "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&q=80",
+          favori: false,
+          sepetAdedi: 0,
+        },
+      ];
+
+      // Tarayıcı Hafızasından (LocalStorage) Verileri Çeker veya Varsayılanları Kullanır
+      let urunler =
+        JSON.parse(localStorage.getItem("retro_urunler")) || varsayilanUrunler;
+
+      // Güncel Ürün Dizisini Tarayıcı Hafızasına Kaydeden Fonksiyon
+      const verileriKaydet = () =>
+        localStorage.setItem("retro_urunler", JSON.stringify(urunler));
+
+      // Belge İçindeki Elemanları Kimlik (ID) ile Hızlıca Seçen Yardımcı Fonksiyon
+      const $ = (id) => document.getElementById(id);
+
+      // Sayfadaki DOM Gösterge, Form ve Grid Elemanlarını Değişkenlere Bağlar
+      const [
+        urunGrid,
+        urunSayisi,
+        sepetSayac,
+        kpiToplam,
+        kpiOrtalama,
+        urunForm,
+      ] = [
+        "urunGrid",
+        "urunSayisi",
+        "sepetSayac",
+        "kpiToplam",
+        "kpiOrtalama",
+        "urunForm",
+      ].map($);
+
+      // Filtreleme ve Sıralama Giriş Elemanlarını Değişkenlere Bağlar
+      const [aramaInput, filtreKategori, siralaInput] = [
+        "aramaInput",
+        "filtreKategori",
+        "siralaInput",
+      ].map($);
+
+      // Ürünleri Filtreleyen, Sıralayan ve Ekrana Basan Ana Fonksiyon
+      const render = () => {
+        // Arama Metnini Küçük Harfe Çevirir ve Kenar Boşluklarını Temizler
+        const arama = aramaInput.value.toLowerCase().trim();
+        // Seçilen Kategori Değerini Alır
+        const kat = filtreKategori.value;
+        // Seçilen Sıralama Türünü Alır
+        const sirala = siralaInput.value;
+
+        // Ürünleri Arama Kelimesi ve Kategori Kriterine Göre Filtreler
+        let filtrelenmis = urunler.filter(
+          (u) =>
+            u.ad.toLowerCase().includes(arama) &&
+            (kat === "ALL" || u.kategori === kat),
+        );
+
+        // Sıralama Seçeneklerine Karşılık Gelen Karşılaştırma Fonksiyonları Haritası
+        const sortMap = {
+          "fiyat-artan": (a, b) => a.fiyat - b.fiyat, // Ucuzdan Pahalıya
+          "fiyat-azalan": (a, b) => b.fiyat - a.fiyat, // Pahalıdan Ucuza
+          "isim-az": (a, b) => a.ad.localeCompare(b.ad, "tr"), // A'dan Z'ye Türkçe Sıralama
+        };
+        // Eğer Geçerli Bir Sıralama Türü Seçilmişse Diziyi Sıralar
+        if (sortMap[sirala]) filtrelenmis.sort(sortMap[sirala]);
+
+        // Filtrelenmiş Ürünlerin Toplam Fiyatını Hesaplar
+        const toplam = filtrelenmis.reduce((acc, u) => acc + u.fiyat, 0);
+        // Filtrelenmiş Ürün Sayısını Göstergeye Yazar
+        urunSayisi.textContent = `${filtrelenmis.length} Ürün`;
+        // Sepetteki Toplam Parça Sayısını Hesaplar ve Rozete Yazar
+        sepetSayac.textContent = `🛒 Sepet (${urunler.reduce((acc, u) => acc + (u.sepetAdedi || 0), 0)})`;
+        // Toplam Fiyatı Para Birimi Formatı ile KPI Kutusuna Yazar
+        kpiToplam.textContent = `${toplam.toLocaleString("tr-TR")} ₺`;
+        // Ortalama Fiyatı Hesaplar ve KPI Kutusuna Yazar
+        kpiOrtalama.textContent = `${(filtrelenmis.length ? Math.round(toplam / filtrelenmis.length) : 0).toLocaleString("tr-TR")} ₺`;
+
+        // Eğer Filtreleme Sonucu Boşsa Bilgi Mesajı, Değilse Ürün Kartlarını HTML Olarak Basar
+        urunGrid.innerHTML =
+          filtrelenmis.length === 0
+            ? '<div class="bos-durum">Aranan kriterlere uygun ürün bulunamadı.</div>'
+            : filtrelenmis
+                .map(
+                  (urun) => `
+            <article class="urun-karti" data-id="${urun.id}">
+              <div class="kart-resim-kapsayici">
+                <img class="kart-resim" src="${urun.resim}" alt="${urun.ad}" onerror="this.onerror=null; this.src='https://placehold.co/400x300?text=Görsel+Yok'">
+                <button class="btn-favori ${urun.favori ? "aktif" : ""}" data-action="favorite" title="Favori">${urun.favori ? "♥" : "♡"}</button>
+              </div>
+              <div class="kart-icerik">
+                <span class="kart-kategori">${urun.kategori}</span>
+                <h3 class="kart-baslik">${urun.ad}</h3>
+                <div class="kart-fiyat">${urun.fiyat.toLocaleString("tr-TR")} ₺</div>
+                <div class="kart-butonlar">
+                  <button class="btn-sepet" data-action="add-cart">Sepete Ekle</button>
+                  <button class="btn-sil" data-action="delete">Sil</button>
+                </div>
+              </div>
+            </article>
+          `,
+                )
+                .join(""); // Dizi Elemanlarını Birleştirerek Tek Bir Metin Yapar
+      };
+
+      // Form Gönderildiğinde (Submit) Çalışan Olay Dinleyicisi
+      urunForm.onsubmit = (e) => {
+        e.preventDefault(); // Sayfanın Yeniden Yüklenmesini Engeller
+        const f = e.target.elements; // Form Giriş Elemanlarını Temsil Eder
+
+        // Yeni Ürün Nesnesini Oluşturup Diziye Ekleyen Fonksiyon
+        const ekle = (resimUrl) => {
+          urunler.unshift({
+            id: Date.now(), // Benzersiz Zaman Damgası Kimliği
+            ad: f.adInput.value.trim(), // Ürün İsmi
+            kategori: f.kategoriInput.value, // Ürün Kategorisi
+            fiyat: Number(f.fiyatInput.value), // Sayıya Çevrilmiş Fiyat
+            resim: resimUrl || varsayilanResimler[f.kategoriInput.value], // Resim URL'si veya SVG Yedeği
+            favori: false, // Varsayılan Favori Durumu
+            sepetAdedi: 0, // Başlangıç Sepet Miktarı
+          });
+          verileriKaydet(); // Güncel Verileri Hafızaya Kaydeder
+          urunForm.reset(); // Form Alanlarını Temizler
+          render(); // Sayfayı Yeni Eklenen Ürün ile Günceller
+        };
+
+        // Yüklenen Dosyayı Yakalar
+        const dosya = f.dosyaInput.files[0];
+        if (dosya) {
+          // Eğer Dosya Seçilmişse FileReader ile Veri Formatına Okur
+          const reader = new FileReader();
+          reader.onload = () => ekle(reader.result); // Okuma Tamamlandığında Ürünü Ekler
+          reader.readAsDataURL(dosya); // Dosyayı Base64 Metnine Çevirir
+        } else {
+          // Dosya Seçilmemişse Girilen URL veya Boş Değer ile Ekler
+          ekle(f.resimInput.value.trim());
+        }
+      };
+
+      // Kart İçi Tıklamalar İçin Merkezi Olay Dinleyicisi (Event Delegation)
+      urunGrid.onclick = (e) => {
+        // Tıklanan Yere En Yakın Ürün Kartını Bulur
+        const kart = e.target.closest(".urun-karti");
+        if (!kart) return; // Kart Dışına Tıklandıysa Fonksiyonu Durdurur
+
+        // Kartın Benzersiz Kimlik Numarasını Alır
+        const id = Number(kart.dataset.id);
+        // Tıklanan Butonun Eylem Türünü Tespit Eder
+        const action =
+          e.target.dataset.action ||
+          e.target.closest("[data-action]")?.dataset.action;
+        // İlgili Ürünü Dizide Bulur
+        const urun = urunler.find((u) => u.id === id);
+
+        // Eylem Tipine Göre İlgili İşlemi Yapar
+        if (action === "delete")
+          urunler = urunler.filter((u) => u.id !== id); // Ürünü Listeden Çıkarır
+        else if (action === "favorite" && urun)
+          urun.favori = !urun.favori; // Favori Durumunu Değiştirir
+        else if (action === "add-cart" && urun)
+          urun.sepetAdedi = (urun.sepetAdedi || 0) + 1; // Sepet Adedini 1 Artırır
+        else return; // Tanımsız Bir Butona Tıklandıysa Çıkar
+
+        verileriKaydet(); // Değişiklikleri Tarayıcı Hafızasına Yazar
+        render(); // Arayüzü Yeni Durum ile Tekrar Çizer
+      };
+
+      // Arama, Kategori ve Sıralama Alanlarına Veri Girildikçe Listeyi Günceller
+      [aramaInput, filtreKategori, siralaInput].forEach(
+        (el) => (el.oninput = render),
+      );
+
+      // Sayfa İlk Açıldığında Başlangıç Verilerini Ekrana Çizer
+      render();
+    </script>
+  </body>
+</html>
